@@ -1,0 +1,18 @@
+CFLAGS := -DLRSLIB -DGMP -DTIMES -DSIGNALS -DB64 -DLRS_QUIET -DNOTMATLAB
+DFLAG = -g
+LFLAGS = -Wl,-no_pie -lgmp
+
+MATLABINCLUDEDIR = /Applications/MATLAB_R2015a.app/extern/include/
+
+
+OBJECTS = mainFile.o GMPmat.o dMat.o projection.o\
+		translation.o lrslib.o lrsgmp.o
+
+all: $(OBJECTS)
+	$(CC) $(LFLAGS) $^ -o mainExec 
+
+.c.o:
+	$(CC) $(DFLAG) $(CFLAGS) -I$(MATLABINCLUDEDIR) $< -o $@ -c
+
+clean:
+	rm -f $(OBJECTS) 

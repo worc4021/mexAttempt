@@ -1,0 +1,4 @@
+.DS_Store
+*.mat
+*.o
+*.mexmaci64

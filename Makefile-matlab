@@ -1,0 +1,26 @@
+CFLAGS = -DLRSLIB -DGMP -DTIMES -DSIGNALS -DB64 -DLRS_QUIET
+DFLAG = -g
+LFLAGS = -Wl,-no_pie -lgmp
+
+CFLAGS += -DNDEBUG -DMX_COMPAT_32 -DMATLAB_MEX_FILE -fno-common -fexceptions
+
+MATLABINC = /Applications/MATLAB_R2015a.app/extern/include/
+SIMULINKINC = /Applications/MATLAB_R2015a.app/simulink/include/
+LFLAGS = -Wl,-twolevel_namespace -undefined error -bundle -lmx -lmex -lmat -lstdc++
+EFLAGS = -Wl,-exported_symbols_list,"/Applications/MATLAB_R2015a.app/extern/lib/maci64/mexFunction.map"
+GMP = /Applications/MATLAB_R2015a.app/bin/maci64/libgmp.dylib
+# GMP = -lgmp
+MATLABLIB = /Applications/MATLAB_R2015a.app/bin/maci64/
+
+ifneq ($(MAKECMDGOALS),MATLAB)
+	OBJECTS = mexMe.o dMat.o GMPmat.o mexInterface.o projection.o translation.o lrslib.o lrsgmp.o
+endif
+
+all: $(OBJECTS)
+	$(CC) $(LFLAGS) $(EFLAGS) -L$(MATLABLIB) $(GMP) $^ -o mexMe.mexmaci64
+
+.c.o:
+	$(CC) $(DFLAG) $(CFLAGS) -I$(MATLABINC) -I$(SIMULINKINC) $< -o $@ -c
+
+clean:
+	rm -f *.o *.mexmaci64
